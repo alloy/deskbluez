@@ -85,7 +85,7 @@ export class LinakMover extends AbstractMover {
         if (this.desiredPosition > this.desk.total()) {
             throw new Error(`Desk is not capable to move over: ${this.desk.total()} steps, desired: ${this.desiredPosition}`);
         } else if (this.desiredPosition < 0) {
-            throw new Error(`Desk is not capable to move bellow ZERO`);
+            throw new Error(`Desk is not capable to move below ZERO`);
         }
 
         this.previousPerformedPosition = this.state.value;
@@ -130,6 +130,8 @@ export class LinakMover extends AbstractMover {
             normalizedPosition = this.position * 100;
         } else if (this.unit === LENGTH_UNITS.INC) {
             normalizedPosition = this.position * 2.54 * 100;
+        } else if (this.unit === LENGTH_UNITS.PCT) {
+            normalizedPosition = (((this.desk.total() - this.desk.offset()) / 100) * this.position) + this.desk.offset();
         }
 
         if (this.absolute) {

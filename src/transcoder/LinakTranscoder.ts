@@ -24,9 +24,10 @@ export class LinakTranscoder extends AbstractTranscoder {
         const absoluteHeight = value + this.desk.offset();
         const cm = absoluteHeight / 100;
         const inch = absoluteHeight / 100 / 2.54;
+        const pct = value / ((this.desk.total() - this.desk.offset()) / 100)
 
         return {
-            value, cm, inch, speed
+            value, cm, inch, pct, speed
         }
     }
 

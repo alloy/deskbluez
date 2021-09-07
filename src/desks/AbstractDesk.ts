@@ -19,6 +19,8 @@ export type DeskState = {
     // Desk Absolute Height position in CM and INCHES
     cm: number
     inch: number
+    // Desk Relative Height position in %
+    pct: number
 
     speed: number
 }
@@ -30,7 +32,8 @@ export type DeskEventListener = (event: DeskEvent) => void
 export enum LENGTH_UNITS {
     CM = "cm",
     DESK = "desk",
-    INC = "inch"
+    INC = "inch",
+    PCT = "pct"
 }
 
 export abstract class AbstractDesk {

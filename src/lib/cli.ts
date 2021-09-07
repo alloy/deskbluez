@@ -161,17 +161,17 @@ export class CommandLine {
 
         const initialState = await desk.state();
 
-        const progress = new ProgressBar(":percent [:bar] (:cmcm | :inchinches)", {
+        const progress = new ProgressBar(":percent [:bar] (:cmcm | :inchinches | :pctpct)", {
             // Total is the difference from current position to the desired position.
-            total: Math.abs(pos - (unit === LENGTH_UNITS.CM ? initialState.cm : initialState.inch)),
+            total: Math.abs(pos - (unit === LENGTH_UNITS.CM ? initialState.cm : unit === LENGTH_UNITS.INC ? initialState.inch : initialState.pct)),
             renderThrottle: 50,
             width: 20,
             clear: true
         });
 
         desk.addListener(DESK_EVENT.STATE_CHANGE, (state) => {
-            progress.curr = unit === LENGTH_UNITS.CM ? Math.abs(initialState.cm - state.cm) : Math.abs(initialState.inch - state.inch);
-            progress.render({ cm: state.cm.toFixed(0), inch: state.inch.toFixed(0), speed: state.speed / 100 });
+            progress.curr = unit === LENGTH_UNITS.CM ? Math.abs(initialState.cm - state.cm) : unit === LENGTH_UNITS.INC ? Math.abs(initialState.inch - state.inch) : Math.abs(initialState.pct - state.pct);
+            progress.render({ cm: state.cm.toFixed(0), inch: state.inch.toFixed(0), pct: state.pct.toFixed(0), speed: state.speed / 100 });
         });
 
         const completed = await desk.moveTo(pos, unit);
@@ -239,14 +239,14 @@ export class CommandLine {
         const [root = null, pos = null, unit = null] = parser.exec(position) || [];
 
         if (Number.isNaN(parseInt(pos))) {
-            throw new Error("Invalid position input, supported format: <position: number>(cm|inch) - example: '70cm' OR '35inch'");
-        } else if (["cm", "inch"].indexOf(unit) === -1) {
-            throw new Error("Invalid position unit: supported units: 'cm' OR 'inch' - example: '70cm' OR '35inch'");
+            throw new Error("Invalid position input, supported format: <position: number>(cm|inch|%) - example: '70cm' OR '35inch' OR '42%'");
+        } else if (["cm", "inch", "%"].indexOf(unit) === -1) {
+            throw new Error("Invalid position unit: supported units: 'cm' OR 'inch' OR '%' - example: '70cm' OR '35inch' OR '42%'");
         }
 
         return {
             pos: parseInt(pos),
-            unit: unit === "cm" ? LENGTH_UNITS.CM : LENGTH_UNITS.INC
+            unit: unit === "cm" ? LENGTH_UNITS.CM : unit === "inch" ? LENGTH_UNITS.INC : LENGTH_UNITS.PCT
         } as ParsedPosition;
     }
 }
