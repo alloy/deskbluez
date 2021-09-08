@@ -62,7 +62,7 @@ export class CommandLine {
 
         program
             .command("to <position>")
-            .description("move desk to a specific position (absolute height), supported units: centimeter/inches, example: '65cm' OR '40inch' ")
+            .description("move desk to a specific position, supported units: centimeter/inches/%, example: '65cm' OR '40inch' OR '42%'")
             .action(this.decorate(this.actionMoveTo))
 
         this.bluetooth = new Bluetooth();
@@ -137,6 +137,7 @@ export class CommandLine {
             State: {
                 Centimeters: state.cm.toFixed(2),
                 Inches: state.inch.toFixed(2),
+                Percent: state.pct.toFixed(2),
                 DeviceValue: "" + state.value,
                 DeviceSpeedValue: "" + state.speed,
             }
@@ -158,6 +159,7 @@ export class CommandLine {
     private actionMoveTo = async (position: string) => {
         const desk = await this.connectDesk();
         const { pos, unit } = this.parsePositionString(position);
+        console.log({ pos, unit })
 
         const initialState = await desk.state();
 
@@ -235,7 +237,7 @@ export class CommandLine {
     }
 
     private parsePositionString = (position: string): ParsedPosition => {
-        const parser = /(\d+)(\w+)?/;
+        const parser = /(\d+)(\w+|%)?/;
         const [root = null, pos = null, unit = null] = parser.exec(position) || [];
 
         if (Number.isNaN(parseInt(pos))) {
