@@ -159,11 +159,10 @@ export class CommandLine {
     private actionMoveTo = async (position: string) => {
         const desk = await this.connectDesk();
         const { pos, unit } = this.parsePositionString(position);
-        console.log({ pos, unit })
 
         const initialState = await desk.state();
 
-        const progress = new ProgressBar(":percent [:bar] (:cmcm | :inchinches | :pctpct)", {
+        const progress = new ProgressBar(":percent [:bar] (:cmcm | :inchinches | :pct%)", {
             // Total is the difference from current position to the desired position.
             total: Math.abs(pos - (unit === LENGTH_UNITS.CM ? initialState.cm : unit === LENGTH_UNITS.INC ? initialState.inch : initialState.pct)),
             renderThrottle: 50,
