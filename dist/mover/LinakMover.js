@@ -112,7 +112,7 @@ class LinakMover extends AbstractMover_1.AbstractMover {
             normalizedPosition = this.position * 2.54 * 100;
         }
         else if (this.unit === AbstractDesk_1.LENGTH_UNITS.PCT) {
-            normalizedPosition = (((this.desk.total() - this.desk.offset()) / 100) * this.position) + this.desk.offset();
+            normalizedPosition = ((this.desk.total() / 100) * this.position) + this.desk.offset();
         }
         if (this.absolute) {
             /**

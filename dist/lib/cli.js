@@ -111,9 +111,8 @@ class CommandLine {
         this.actionMoveTo = (position) => __awaiter(this, void 0, void 0, function* () {
             const desk = yield this.connectDesk();
             const { pos, unit } = this.parsePositionString(position);
-            console.log({ pos, unit });
             const initialState = yield desk.state();
-            const progress = new progress_1.default(":percent [:bar] (:cmcm | :inchinches | :pctpct)", {
+            const progress = new progress_1.default(":percent [:bar] (:cmcm | :inchinches | :pct%)", {
                 // Total is the difference from current position to the desired position.
                 total: Math.abs(pos - (unit === AbstractDesk_1.LENGTH_UNITS.CM ? initialState.cm : unit === AbstractDesk_1.LENGTH_UNITS.INC ? initialState.inch : initialState.pct)),
                 renderThrottle: 50,
